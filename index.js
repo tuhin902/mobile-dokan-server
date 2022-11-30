@@ -17,12 +17,19 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const categoriesCollection = client.db('mobiledb').collection('categories');
+        const productsCollection = client.db('mobiledb').collection('products');
 
 
         app.get('/categories', async (req, res) => {
             const query = {};
             const categories = await categoriesCollection.find(query).toArray();
             res.send(categories);
+        });
+
+        app.get('/category/:type', async (req, res) => {
+            const type = req.params.type;
+            const result = await productsCollection.find({ categoryName: type }).toArray();
+            res.send(result);
         });
 
     }
