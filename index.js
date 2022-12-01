@@ -18,6 +18,7 @@ async function run() {
     try {
         const categoriesCollection = client.db('mobiledb').collection('categories');
         const productsCollection = client.db('mobiledb').collection('products');
+        const bookingsCollection = client.db('mobiledb').collection('bookings');
 
 
         app.get('/categories', async (req, res) => {
@@ -26,10 +27,18 @@ async function run() {
             res.send(categories);
         });
 
-        app.get('/category/:type', async (req, res) => {
+        app.get('/categories/:type', async (req, res) => {
             const type = req.params.type;
-            const result = await productsCollection.find({ categoryName: type }).toArray();
+            const result = await productsCollection.find({ type: type }).toArray();
             res.send(result);
+        });
+
+        //booking
+        app.post('/bookings', async (req, res) => {
+            const bookings = req.body;
+            const result = await bookingsCollection.insertOne(bookings);
+            res.send(result);
+
         });
 
     }
