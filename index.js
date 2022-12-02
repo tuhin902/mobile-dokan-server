@@ -39,6 +39,7 @@ async function run() {
         const productsCollection = client.db('mobiledb').collection('products');
         const bookingsCollection = client.db('mobiledb').collection('bookings');
         const usersCollection = client.db('mobiledb').collection('users');
+        const addProductsCollection = client.db('mobiledb').collection('addproducts');
 
 
         app.get('/categories', async (req, res) => {
@@ -125,6 +126,19 @@ async function run() {
                 }
             }
             const result = await usersCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        });
+
+        //add product
+        app.get('/myproducts', async (req, res) => {
+            const query = {};
+            const products = await addProductsCollection.find(query).toArray();
+            res.send(products);
+        });
+
+        app.post('/addproducts', async (req, res) => {
+            const addProduct = req.body;
+            const result = await addProductsCollection.insertOne(addProduct);
             res.send(result);
         })
 
